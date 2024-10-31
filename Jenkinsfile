@@ -1,25 +1,41 @@
 pipeline {
   agent any
   stages {
-    stage('git scm update') {
+    stage('Git SCM Update') {
       steps {
         git url: 'https://github.com/paperdoll96/jenkinsTest.git', branch: 'master'
       }
     }
-    stage('docker build and push') {
+    stage('Docker Build and Push') {
       steps {
         sh '''
-        sudo docker build -t paperdoll96/keduitlab:pupple .
-        sudo docker push paperdoll96/keduitlab:pupple
+        sudo docker build -t paperdoll96/keduitlab:purple .
+        sudo docker push paperdoll96/keduitlab:purple
         '''
       }
     }
-    stage('deploy and service') {
+    stage('Kubernetes Deploy and Service') {
       steps {
         sh '''
-        sudo kubectl apply -f test.yml
+        # 기존 Deployments 및 Services 삭제 (필요 시)
+        sudo kubectl delete deployment keduitlab-deployment || true
+        sudo kubectl delete svc keduitlab-service || true
+
+        # 새로운 Deployment 생성
+        sudo kubectl create deployment keduitlab-deployment --image=paperdoll96/keduitlab:purple
+
+        # Service 생성 (LoadBalancer)
+        sudo kubectl expose deployment keduitlab-deployment --type=LoadBalancer --name=keduitlab-service --port=80 --target-port=80
         '''
       }
+    }
+  }
+  post {
+    success {
+      echo 'Deployment and service creation successful!'
+    }
+    failure {
+      echo 'Deployment failed. Check the logs for details.'
     }
   }
 }
