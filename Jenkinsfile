@@ -27,8 +27,8 @@ pipeline {
         sh '''
         # Ansible을 사용해 master 노드에서 Kubernetes 배포 및 서비스 생성
         ansible master -m shell -a "
-          kubectl create deployment jenkinstest --replicas 3 --port=80 --image=paperdoll96/keduitlab:white;
-          kubectl expose deployment jenkinstest --type=LoadBalancer --name=jenkinstest-service --port=80 --target-port=80;
+          kubectl create deployment jenkinstest --replicas 3 --port=80 --image=paperdoll96/keduitlab:white  --become
+          kubectl expose deployment jenkinstest --type=LoadBalancer --name=jenkinstest-service --port=80 --target-port=80  --become
         "
         '''
       }
