@@ -9,7 +9,6 @@ pipeline {
     stage('Docker Build and Push') {
       steps {
         sh '''
-        docker login -u paperdoll96 -p junho741!@
         sudo docker build -t paperdoll96/keduitlab:purple .
         sudo docker push paperdoll96/keduitlab:purple
         '''
