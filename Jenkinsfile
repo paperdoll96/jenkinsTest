@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  environment {
+    DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'  // 추가한 Credentials ID
+  }
   stages {
     stage('Git SCM Update') {
       steps {
@@ -8,16 +11,18 @@ pipeline {
     }
     stage('Docker Build and Push') {
       steps {
-        sh '''
-        sudo docker build -t paperdoll96/keduitlab:white .
-        sudo docker push paperdoll96/keduitlab:white
-        '''
+        withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+          sh '''
+          echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+          docker build -t paperdoll96/keduitlab:white .
+          docker push paperdoll96/keduitlab:white
+          '''
+        }
       }
     }
     stage('Ansible: Pull Image on Nodes') {
       steps {
         sh '''
-        # Ansible을 사용해 node1, node2, node3에서 Docker 이미지를 풀링
         ansible node -m shell -a "docker pull paperdoll96/keduitlab:white"
         '''
       }
@@ -25,7 +30,6 @@ pipeline {
     stage('Ansible: Kubernetes Deploy and Service on Master') {
       steps {
         sh '''
-        # Ansible을 사용해 master 노드에서 Kubernetes 배포 및 서비스 생성
         ansible master -m shell -a "
           sudo kubectl create deployment jenkinstest --replicas 3 --port=80 --image=paperdoll96/keduitlab:white
           sudo kubectl expose deployment jenkinstest --type=LoadBalancer --name=jenkinstest-service --port=80 --target-port=80
