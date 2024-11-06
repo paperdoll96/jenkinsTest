@@ -23,14 +23,14 @@ pipeline {
     stage('Ansible: Pull Image on Nodes') {
       steps {
         sh '''
-        ansible node -m shell -a "docker pull paperdoll96/keduitlab:white"
+        ansible node -b -m shell -a "docker pull paperdoll96/keduitlab:white"
         '''
       }
     }
     stage('Ansible: Kubernetes Deploy and Service on Master') {
       steps {
         sh '''
-        ansible master -m shell -a "
+        ansible master -b -m shell -a "
           sudo kubectl create deployment jenkinstest --replicas 3 --port=80 --image=paperdoll96/keduitlab:white
           sudo kubectl expose deployment jenkinstest --type=LoadBalancer --name=jenkinstest-service --port=80 --target-port=80
         "
