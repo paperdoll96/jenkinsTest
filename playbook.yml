@@ -1,0 +1,27 @@
+- name: Configure Docker on all nodes
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure Docker daemon.json exists
+      copy:
+        dest: /etc/docker/daemon.json
+        content: |
+          {
+            "insecure-registries": ["211.183.3.198"]
+          }
+      notify:
+        - Restart Docker
+
+    - name: Copy Harbor certificate
+      copy:
+        src: /etc/docker/certs.d/211.183.3.198/ca.crt
+        dest: /etc/docker/certs.d/211.183.3.198/ca.crt
+        mode: '0644'
+      notify:
+        - Restart Docker
+
+  handlers:
+    - name: Restart Docker
+      service:
+        name: docker
+        state: restarted
