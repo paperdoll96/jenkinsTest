@@ -18,7 +18,7 @@ pipeline {
     stage('Docker Build and Push') {  // Docker 이미지 빌드 및 Harbor에 Push
       steps {
         withCredentials([usernamePassword(credentialsId: "${HARBOR_CREDENTIALS_ID}", usernameVariable: 'HARBOR_USER', passwordVariable: 'HARBOR_PASS')]) {
-          # Harbor 자격증명을 사용하여 로그인
+          // Harbor 자격증명을 사용하여 로그인
           sh '''
           echo $HARBOR_PASS | docker login $HARBOR_URL -u $HARBOR_USER --password-stdin
           # Harbor에 로그인
