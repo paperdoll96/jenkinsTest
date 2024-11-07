@@ -39,8 +39,7 @@ pipeline {
     stage('Ansible: Kubernetes Deploy and Service on Master') {
       steps {
         sh '''
-        ansible master -b -m shell -a "kubectl create deployment jenkinstest --replicas=3 --port=80 --image=$HARBOR_URL/$HARBOR_REPO:white && \
-                                       kubectl expose deployment jenkinstest --type=LoadBalancer --name=jenkinstest-service --port=80 --target-port=80"
+        ansible master -b -m shell -a "kubectl apply -f deployment.yaml && kubectl apply -f service.yaml"
         '''
       }
     }
