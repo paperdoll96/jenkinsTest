@@ -25,7 +25,10 @@
         mode: '0644'
       notify:
         - Restart Docker
-
+        
+    - name: Pull Docker Image
+      shell: docker pull 211.183.3.198/myproject/keduitlab:white
+        
   handlers:
     - name: Restart Docker
       service:
