@@ -2,7 +2,7 @@ pipeline {
   agent any
   environment {
     HARBOR_CREDENTIALS_ID = 'harbor-credentials'  // Jenkins에 추가한 Harbor 자격증명 ID
-    HARBOR_URL = 'https://211.183.3.198'          // Harbor HTTPS URL
+    HARBOR_URL = '211.183.3.198'          // Harbor HTTPS URL
     HARBOR_REPO = 'myproject/keduitlab'           // Harbor에서 생성한 프로젝트 이름 + 레포 경로
   }
   stages {
