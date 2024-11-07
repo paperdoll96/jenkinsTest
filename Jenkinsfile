@@ -11,7 +11,7 @@ pipeline {
     stage('Git SCM Update') {  // 최신 소스 코드를 GitHub에서 가져오는 단계
       steps {
         git url: 'https://github.com/paperdoll96/jenkinsTest.git', branch: 'master'
-        # GitHub의 master 브랜치에서 Jenkinsfile 및 관련 소스 코드 다운로드
+        // GitHub의 master 브랜치에서 Jenkinsfile 및 관련 소스 코드 다운로드
       }
     }
 
