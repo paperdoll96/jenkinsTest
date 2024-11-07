@@ -29,13 +29,6 @@ pipeline {
         '''
       }
     }
-    stage('Ansible: Pull Image on Nodes') {
-      steps {
-        sh '''
-        ansible node -b -m shell -a "docker pull $HARBOR_URL/$HARBOR_REPO:white"
-        '''
-      }
-    }
   }
   post {
     success {
