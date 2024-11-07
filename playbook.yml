@@ -28,6 +28,7 @@
 
     - name: Harbor에서 Docker 이미지를 Pull
       shell: docker pull 211.183.3.198/myproject/keduitlab:white  # 이미지 Pull 명령어
+      become: true
       # ignore_errors: yes  # 실패 시에도 다음 태스크 실행 계속
 
   handlers:
