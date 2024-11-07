@@ -22,6 +22,13 @@ pipeline {
         }
       }
     }
+    stage('Configure Nodes') {
+      steps {
+        sh '''
+        ansible-playbook playbook.yml
+        '''
+      }
+    }
     stage('Ansible: Pull Image on Nodes') {
       steps {
         sh '''
