@@ -12,6 +12,12 @@
       notify:
         - Restart Docker
 
+    - name: Ensure Docker certs directory exists
+      file:
+        path: /etc/docker/certs.d/211.183.3.198
+        state: directory
+        mode: '0755'
+
     - name: Copy Harbor certificate
       copy:
         src: /etc/docker/certs.d/211.183.3.198/ca.crt
