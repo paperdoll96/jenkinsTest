@@ -7,7 +7,7 @@
         dest: /etc/docker/daemon.json  # 설정 파일의 위치
         content: |  # 설정 내용
           {
-            "insecure-registries": ["211.183.3.198"]  # Harbor 레지스트리를 신뢰하도록 설정
+            "insecure-registries": ["211.183.3.198"]
           }
       notify:  # 설정 변경 시 Docker 재시작
         - Restart Docker
