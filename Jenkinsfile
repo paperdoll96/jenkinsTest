@@ -11,23 +11,23 @@ pipeline {
     stage('Git SCM Update') {  // 최신 소스 코드를 GitHub에서 가져오는 단계
       steps {
         git url: 'https://github.com/paperdoll96/jenkinsTest.git', branch: 'master'
-        // GitHub의 master 브랜치에서 Jenkinsfile 및 관련 소스 코드 다운로드
+        # GitHub의 master 브랜치에서 Jenkinsfile 및 관련 소스 코드 다운로드
       }
     }
 
     stage('Docker Build and Push') {  // Docker 이미지 빌드 및 Harbor에 Push
       steps {
         withCredentials([usernamePassword(credentialsId: "${HARBOR_CREDENTIALS_ID}", usernameVariable: 'HARBOR_USER', passwordVariable: 'HARBOR_PASS')]) {
-          // Harbor 자격증명을 사용하여 로그인
+          # Harbor 자격증명을 사용하여 로그인
           sh '''
           echo $HARBOR_PASS | docker login $HARBOR_URL -u $HARBOR_USER --password-stdin
-          // Harbor에 로그인
+          # Harbor에 로그인
 
           docker build -t $HARBOR_URL/$HARBOR_REPO:white .
-          // Docker 이미지 빌드 및 태그 설정
+          # Docker 이미지 빌드 및 태그 설정
 
           docker push $HARBOR_URL/$HARBOR_REPO:white
-          // 빌드한 이미지를 Harbor 레지스트리에 Push
+          # 빌드한 이미지를 Harbor 레지스트리에 Push
           '''
         }
       }
@@ -37,7 +37,7 @@ pipeline {
       steps {
         sh '''
         ansible-playbook playbook.yml
-        // Ansible Playbook 실행. Docker 설정 및 Kubernetes 리소스 배포 자동화
+        # Ansible Playbook 실행. Docker 설정 및 Kubernetes 리소스 배포 자동화
         '''
       }
     }
