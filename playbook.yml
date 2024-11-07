@@ -31,3 +31,23 @@
       service:
         name: docker
         state: restarted
+
+- name: Deploy Kubernetes resources
+  hosts: master
+  become: true
+  tasks:
+    - name: Create deployment.yaml from template
+      template:
+        src: deployment.yaml.j2
+        dest: /tmp/deployment.yaml
+
+    - name: Create service.yaml from template
+      template:
+        src: service.yaml.j2
+        dest: /tmp/service.yaml
+
+    - name: Apply deployment
+      shell: kubectl apply -f /tmp/deployment.yaml
+
+    - name: Apply service
+      shell: kubectl apply -f /tmp/service.yaml
