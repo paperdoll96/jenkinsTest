@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkinstest
+  labels:
+    app: jenkinstest
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: jenkinstest
+  template:
+    metadata:
+      labels:
+        app: jenkinstest
+    spec:
+      containers:
+      - name: nginx
+        image: 211.183.3.198/myproject/keduitlab:white
+        ports:
+        - containerPort: 80
