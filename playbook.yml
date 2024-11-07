@@ -38,12 +38,12 @@
   tasks:
     - name: Create deployment.yaml from template
       template:
-        src: deployment.yaml.j2
+        src: deployment.yaml
         dest: /tmp/deployment.yaml
 
     - name: Create service.yaml from template
       template:
-        src: service.yaml.j2
+        src: service.yaml
         dest: /tmp/service.yaml
 
     - name: Apply deployment
