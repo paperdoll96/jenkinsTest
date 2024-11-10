@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jenkinstest
+  name: springboot-deployment
   labels:
-    app: jenkinstest
+    app: springboot-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: jenkinstest
+      app: springboot-app
   template:
     metadata:
       labels:
-        app: jenkinstest
+        app: springboot-app
     spec:
       containers:
-      - name: nginx
-        image: 211.183.3.198/myproject/keduitlab:white
+      - name: springboot-app
+        image: 211.183.3.198/myproject/keduitlab:springboot  # 수정: 올바른 이미지 태그 사용
         ports:
-        - containerPort: 80
+        - containerPort: 8080  # 수정: Spring Boot 기본 포트
