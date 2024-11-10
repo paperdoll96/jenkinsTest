@@ -19,3 +19,30 @@ spec:
         image: 211.183.3.198/myproject/keduitlab:springboot  # 수정: 올바른 이미지 태그 사용
         ports:
         - containerPort: 8080  # 수정: Spring Boot 기본 포트
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-mysql
+  labels:
+    app: my-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-mysql
+  template:
+    metadata:
+      labels:
+        app: my-mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: test123
+        - name: MYSQL_DATABASE
+          value: review_db
+        ports:
+        - containerPort: 3306
