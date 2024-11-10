@@ -8,7 +8,7 @@ spec:
     app: springboot-app  # Deployment와 일치하는 레이블e
   ports:
   - protocol: TCP
-    port: 80            # 외부에서 접근할 포트
+    port: 80            # 외부에서 접근할 포트d
     targetPort: 8080    # Spring Boot 컨테이너의 포트
 ---
 apiVersion: v1
