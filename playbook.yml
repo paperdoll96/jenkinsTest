@@ -1,57 +1,58 @@
 - name: Configure Docker on all nodes  # 모든 노드에서 Docker 설정 구성
-  hosts: all
-  become: true
+  hosts: all  # 대상: 모든 호스트
+  become: true  # 관리자 권한으로 실행
   tasks:
     - name: Docker 설정 파일 존재 여부 확인 및 생성
       copy:
-        dest: /etc/docker/daemon.json
-        content: |
+        dest: /etc/docker/daemon.json  # 설정 파일의 위치
+        content: |  # 설정 내용
           {
             "insecure-registries": ["211.183.3.198"]
           }
-      notify:
+      notify:  # 설정 변경 시 Docker 재시작
         - Restart Docker
 
     - name: Docker 인증서 디렉토리 확인 및 생성
       file:
-        path: /etc/docker/certs.d/211.183.3.198
-        state: directory
-        mode: '0755'
+        path: /etc/docker/certs.d/211.183.3.198  # Harbor 인증서가 저장될 디렉토리 경로
+        state: directory  # 디렉토리 상태 유지/생성
+        mode: '0755'  # 디렉토리 권한 설정
 
     - name: Harbor 인증서를 Docker 인증서 디렉토리에 복사
       copy:
-        src: /path/to/local/ca.crt  # 인증서의 로컬 경로 (수정 필요)
-        dest: /etc/docker/certs.d/211.183.3.198/ca.crt
-        mode: '0644'
-      notify:
+        src: /etc/docker/certs.d/211.183.3.198/ca.crt  # 인증서 원본 경로
+        dest: /etc/docker/certs.d/211.183.3.198/ca.crt  # 인증서 복사 경로
+        mode: '0644'  # 파일 권한 설정
+      notify:  # 인증서 복사 후 Docker 재시작
         - Restart Docker
 
     - name: Harbor에서 Docker 이미지를 Pull
-      shell: docker pull 211.183.3.198/myproject/keduitlab:springboot  # 이미지 태그 수정
+      shell: docker pull 211.183.3.198/myproject/keduitlab:springboot  # 이미지 Pull 명령어
       become: true
+      # ignore_errors: yes  # 실패 시에도 다음 태스크 실행 계속
 
   handlers:
-    - name: Restart Docker
+    - name: Restart Docker  # Docker 재시작 핸들러
       service:
-        name: docker
-        state: restarted
+        name: docker  # 대상 서비스: Docker
+        state: restarted  # Docker 서비스 재시작
 
 - name: Kubernetes 리소스 배포
-  hosts: master
-  become: true
+  hosts: master  # 대상: 마스터 노드
+  become: true  # 관리자 권한으로 실행
   tasks:
-    - name: Create deployment.yaml from template
-      copy:
-        src: /path/to/local/deployment.yaml  # 로컬의 deployment.yaml 경로
-        dest: /tmp/deployment.yaml
+    - name: Create deployment.yaml from template  # Deployment 설정 템플릿 생성
+      template:
+        src: deployment.yaml  # 템플릿 파일 경로 (로컬)
+        dest: /tmp/deployment.yaml  # 마스터 노드에 생성될 경로
 
-    - name: Create service.yaml from template
-      copy:
-        src: /path/to/local/service.yaml  # 로컬의 service.yaml 경로
-        dest: /tmp/service.yaml
+    - name: Create service.yaml from template  # Service 설정 템플릿 생성
+      template:
+        src: service.yaml  # 템플릿 파일 경로 (로컬)
+        dest: /tmp/service.yaml  # 마스터 노드에 생성될 경로
 
-    - name: Apply deployment
-      shell: kubectl apply -f /tmp/deployment.yaml
+    - name: Apply deployment  # Deployment 리소스 적용
+      shell: kubectl apply -f /tmp/deployment.yaml  # kubectl 명령어를 사용해 Deployment 적용
 
-    - name: Apply service
-      shell: kubectl apply -f /tmp/service.yaml
+    - name: Apply service  # Service 리소스 적용
+      shell: kubectl apply -f /tmp/service.yaml  # kubectl 명령어를 사용해 Service 적용
