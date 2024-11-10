@@ -11,7 +11,7 @@ pipeline {
   stages {
     stage('Clone Spring Boot Repository') {
       steps {
-        git url: "${SPRING_BOOT_REPO}", branch: 'main'
+        git url: "${SPRING_BOOT_REPO}", branch: 'master'
         // Spring Boot 애플리케이션의 최신 소스 코드 가져오기
       }
     }
