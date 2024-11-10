@@ -5,7 +5,7 @@ metadata:
 spec:
   type: LoadBalancer  # 외부 트래픽을 LoadBalancer를 통해 전달
   selector:
-    app: springboot-app  # Deployment와 일치하는 레이블
+    app: springboot-app  # Deployment와 일치하는 레이블e
   ports:
   - protocol: TCP
     port: 80            # 외부에서 접근할 포트
