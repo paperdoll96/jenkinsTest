@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: jenkinstest-service
+  name: springboot-service  # 이름 변경 (더 명확하게)
 spec:
-  type: LoadBalancer
+  type: LoadBalancer  # 외부 트래픽을 LoadBalancer를 통해 전달
   selector:
-    app: jenkinstest
+    app: springboot-app  # Deployment와 일치하는 레이블
   ports:
   - protocol: TCP
-    port: 80
-    targetPort: 80
+    port: 80            # 외부에서 접근할 포트
+    targetPort: 8080    # Spring Boot 컨테이너의 포트
